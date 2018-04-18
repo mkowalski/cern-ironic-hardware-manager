@@ -307,7 +307,14 @@ class CernHardwareManager(hardware.GenericHardwareManager):
                     raise errors.CleaningError("Error erasing superblock for device {}. {}".format(device, e))
 
     def get_os_install_device(self):
+        # (makowals) 18 April 2018
+        # This has to be debug as currently get_cached_node() returns
+        # None even though we do cache_node(node) in get_clean_steps().
+        # The latter is supossed to cache the properties of the node
+        # into a global variable in the module, so it could be read
+        # later, i.e. in the next line. Does not work though :-(
         node_properties = hardware.get_cached_node().get('properties', {})
+
         node_capabilities = node_properties.get('capabilities', {})
         raid_enabled = node_capabilities.get('cern_raid', {})
         if raid_enabled:
